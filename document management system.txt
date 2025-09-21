@@ -1,0 +1,126 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Document {
+    private String title;
+    private String author;
+    private String content;
+
+    public Document(String title, String author, String content) {
+        this.title = title;
+        this.author = author;
+        this.content = content;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void printSummary() {
+        System.out.println("Title: " + title);
+        System.out.println("Author: " + author);
+        System.out.println("Content Preview: " + (content.length() > 50 ? content.substring(0, 50) + "..." : content));
+        System.out.println("-----------------------------------");
+    }
+}
+
+public class DocumentManagementSystem {
+    private List<Document> documents = new ArrayList<>();
+    private Scanner scanner = new Scanner(System.in);
+
+    public void addDocument() {
+        System.out.print("Enter title: ");
+        String title = scanner.nextLine();
+        System.out.print("Enter author: ");
+        String author = scanner.nextLine();
+        System.out.print("Enter content: ");
+        String content = scanner.nextLine();
+
+        documents.add(new Document(title, author, content));
+        System.out.println("Document added successfully.");
+    }
+
+    public void listDocuments() {
+        if (documents.isEmpty()) {
+            System.out.println("No documents found.");
+            return;
+        }
+
+        System.out.println("\nDocuments:");
+        for (Document doc : documents) {
+            doc.printSummary();
+        }
+    }
+
+    public void searchDocument() {
+        System.out.print("Enter title to search: ");
+        String title = scanner.nextLine();
+        boolean found = false;
+
+        for (Document doc : documents) {
+            if (doc.getTitle().equalsIgnoreCase(title)) {
+                System.out.println("Document found:");
+                doc.printSummary();
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No document found with title \"" + title + "\".");
+        }
+    }
+
+    public void deleteDocument() {
+        System.out.print("Enter title to delete: ");
+        String title = scanner.nextLine();
+
+        for (int i = 0; i < documents.size(); i++) {
+            if (documents.get(i).getTitle().equalsIgnoreCase(title)) {
+                documents.remove(i);
+                System.out.println("Document deleted successfully.");
+                return;
+            }
+        }
+        System.out.println("No document found with title \"" + title + "\".");
+    }
+
+    public void run() {
+        while (true) {
+            System.out.println("\nDocument Management System");
+            System.out.println("1. Add Document");
+            System.out.println("2. List Documents");
+            System.out.println("3. Search Document by Title");
+            System.out.println("4. Delete Document by Title");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+
+            String input = scanner.nextLine();
+
+            switch (input) {
+                case "1":
+                    addDocument();
+                    break;
+                case "2":
+                    listDocuments();
+                    break;
+                case "3":
+                    searchDocument();
+                    break;
+                case "4":
+                    deleteDocument();
+                    break;
+                case "5":
+                    System.out.println("Exiting...");
+                    return;
+                default:
+                    System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        new DocumentManagementSystem().run();
+    }
+}
